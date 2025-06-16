@@ -7,7 +7,20 @@ pipeline {
 		booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: 'Skip all test stages')
 	}
 
+	triggers {
+		GenericTRigger(
+			token: 'gh',
+			printContributedVariables: true,
+			printPostContent: true
+		)
+		
+	}
+	
 	stages {
+		stage('Hello') {
+			steps {echo "Webhook reached branch $(env.BRANCH_NAME}"}
+		}
+		
 		stage('Startup') {
 			steps {echo "Build ${env.BUILD_NUMBER} grabbed the lock"}
 		}
