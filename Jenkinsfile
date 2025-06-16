@@ -18,7 +18,7 @@ pipeline {
 	
 	stages {
 		stage('Hello') {
-			steps {echo "Webhook reached branch $(env.BRANCH_NAME}"}
+			steps {echo "Webhook reached branch ${env.BRANCH_NAME}"}
 		}
 		
 		stage('Startup') {
