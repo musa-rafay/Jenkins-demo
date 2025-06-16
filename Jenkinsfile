@@ -8,7 +8,7 @@ pipeline {
 	}
 
 	triggers {
-		GenericTRigger(
+		GenericTrigger(
 			token: 'gh',
 			printContributedVariables: true,
 			printPostContent: true
