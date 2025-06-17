@@ -34,7 +34,7 @@ pipeline {
 
 					env.NEED_BACKEND = diff.any { it.startsWith('backend/') }.toString()
 					env.NEED_WEB	 = diff.any { it.startsWith('web/') }.toString()
-					env.NEED_E2E	 = diff.any { it =~ /\\.(js|css|html$/ }.toString()
+					env.NEED_E2E	 = diff.any { it =~ /\\.(js|css|html)$/ }.toString()
 
 					echo """
      					Changed files: ${diff.join(', ')}
