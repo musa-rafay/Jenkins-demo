@@ -34,16 +34,24 @@ pipeline {
 			steps{
 				script {
 					def target = env.CHANGE_TARGET ?: 'main'
-					def diff = sh(returnStdout: true,
+
+					sh "git fetch --no-tages --depth=50 origin${target}"
+					
+					def rawDiff = sh(returnStdout: true,
 						      script: "git diff --name-only origin/${target}...HEAD"
-						     ).trim().split('\n')
+						     ).trim()
+
+					def diff = rawDiff.split('\\r?\n'
+								).collect{ it.replaceFirst(/^\\./,'') 
+								}.findAlld { it }
 
 					env.NEED_BACKEND = diff.any { it.startsWith('backend/') }.toString()
 					env.NEED_WEB	 = diff.any { it.startsWith('web/') }.toString()
-					env.NEED_E2E	 = diff.any { it =~ /\\.(js|css|html)$/ }.toString()
+					env.NEED_E2E	 = diff.any { it.startsWith('e2e/')	||
+								      it =~ /\\.(js|css|html)$/ }.toString()
 
 					echo """
-     					Changed files: ${diff.join(', ')}
+     					Changed files:\n${diff.join(', ')}
 	  				NEED_BACKEND =  ${env.NEED_BACKEND}
        					NEED_WEB     =  ${env.NEED_WEB}
 	    				NEED_E2E     =  ${env.NEED_E2E}
@@ -74,7 +82,7 @@ pipeline {
 		stage('E2E') {
 			when { expression { env.NEED_E2E = 'true' && !params.SKIP_TESTS } }
 			options { lock('staging-cluster') }
-			steps   { sh 'ls -R | head -20'
+			steps   {
 				  sh 'bash ./e2e/run_e2e.sh'
 				}
 		}
