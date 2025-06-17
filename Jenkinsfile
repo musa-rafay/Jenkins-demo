@@ -20,7 +20,11 @@ pipeline {
 			steps {echo "Webhook reached branch ${env.BRANCH_NAME}"}
 		}
 
-		stage('Checkout') { steps { checkout scm } }
+		stage('Checkout') {
+			steps {
+				checkout scm
+			}
+		}
 		
 		stage('Startup') {
 			steps {echo "Build ${env.BUILD_NUMBER} grabbed the lock"}
