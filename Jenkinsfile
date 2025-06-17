@@ -17,13 +17,17 @@ pipeline {
 	}
 	
 	stages {
+		
 		stage('Hello') {
 			steps {echo "Webhook reached branch ${env.BRANCH_NAME}"}
 		}
+
+		stage('Checkout') { steps { checkout scm } }
 		
 		stage('Startup') {
 			steps {echo "Build ${env.BUILD_NUMBER} grabbed the lock"}
 		}
+		
 		stage('Detect Changes') {
 			steps{
 				script {
@@ -49,13 +53,26 @@ pipeline {
 		stage('Tests') {
 			when { expression { !params.SKIP_TESTS } }
 			parallel {
-				stage('Fast') { steps { sh 'echo fast tests && sleep 5' } }
-				stage('Slow') { steps { sh 'echo slow tests && sleep 20' } }
-
+				stage('Backend') {
+					when { expression { env.NEED_BACKEND == 'true'} }
+					steps {
+						sh 'python -m pytest backend'
+					}
+				}
+				stage('Web') {
+					when { expression { env.NEED_WEB == 'true'} }
+					steps {
+						sh 'npm --prefix web install --loglevel=error'
+						sh 'npm --prefix web test'
+					}
+				}
 			}
 		}
-	}
-
 		
-
+		stage('E2E') {
+			when { expression { env.NEED_E2E = 'true' && !params.SKIP_TESTS } }
+			options { lock('staging-cluster') }
+			steps   { sh 'e2e/run_e2e.sh' }
+		}
+	}
 }
