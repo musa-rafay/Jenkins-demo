@@ -43,7 +43,7 @@ pipeline {
 
 					def diff = rawDiff.split('\\r?\n'
 								).collect{ it.replaceFirst(/^\\./,'') 
-								}.findAlld { it }
+								}.findAll { it }
 
 					env.NEED_BACKEND = diff.any { it.startsWith('backend/') }.toString()
 					env.NEED_WEB	 = diff.any { it.startsWith('web/') }.toString()
