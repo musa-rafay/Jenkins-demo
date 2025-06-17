@@ -1,8 +1,6 @@
 pipeline {
  	agent any
 
-	options { lock('staging-cluster')}
-
 	parameters {
 		booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: 'Skip all test stages')
 	}
