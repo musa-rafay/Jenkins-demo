@@ -31,7 +31,7 @@ pipeline {
 					def diff = sh(returnStdout: true,
 						      script: "git diff --name-only origin/${target}...HEAD")
 						    .trim()
-						    .split('\n)
+						    .split('\n')
 
 					env.NEED_BACKEND = diff.any { it.startsWtih('backend/') }.toString()
 					env.NEED_WEB	 = diff.any { it.startsWith('web/') }.toString()
