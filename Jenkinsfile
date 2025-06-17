@@ -74,7 +74,9 @@ pipeline {
 		stage('E2E') {
 			when { expression { env.NEED_E2E = 'true' && !params.SKIP_TESTS } }
 			options { lock('staging-cluster') }
-			steps   { sh './e2e/run_e2e.sh' }
+			steps   { sh 'ls -R | head -20'
+				  sh 'bash ./e2e/run_e2e.sh'
+				}
 		}
 	}
 }
