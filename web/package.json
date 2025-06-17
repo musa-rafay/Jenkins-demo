@@ -1,1 +1,1 @@
-{"name":"web","scripts": {"test":"echo web tests && exit 0 }}
+{"name":"web","scripts": {"test":"echo web tests && exit 0" }}
