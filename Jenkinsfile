@@ -35,7 +35,7 @@ pipeline {
 				script {
 					def target = env.CHANGE_TARGET ?: 'main'
 
-					sh "git fetch --no-tages --depth=50 origin${target}"
+					sh "git fetch --no-tags --depth=50 origin${target}"
 					
 					def rawDiff = sh(returnStdout: true,
 						      script: "git diff --name-only origin/${target}...HEAD"
